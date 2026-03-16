@@ -1,7 +1,11 @@
+import 'dotenv/config';
 import { Inngest } from "inngest";
 import User from "../models/User.js";
+import mongoose from "mongoose";
 export const inngest = new Inngest({ id: "movie -ticket-booking" });
 
+
+import connectDB from "../configs/db.js";
 
 const syncUserCreation=inngest.createFunction(
     {id:'sync-user-from-clerk'},
@@ -14,6 +18,7 @@ const syncUserCreation=inngest.createFunction(
             name:first_name + ' '+last_name,
             image:image_url
         }
+        await connectDB()
         await User.create(userData)
     }
 )
@@ -23,6 +28,7 @@ const syncUserDeletion=inngest.createFunction(
     {event:'clerk/user.deleted'},
     async({event})=>{
         const {id}=event.data
+        await connectDB()
         await User.findByIdAndDelete(id)
     }
 )
@@ -38,7 +44,9 @@ const syncUserUpdation=inngest.createFunction(
             name:first_name + ' '+last_name,
             image:image_url
         }
+        await connectDB()
         await User.findByIdAndUpdate(id,userData)
     }
 )
+
 export const functions = [syncUserCreation,syncUserDeletion,syncUserUpdation];
