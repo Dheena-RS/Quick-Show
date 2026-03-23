@@ -1,0 +1,43 @@
+{
+  "tamilYouths": [
+    {
+      "adult": false,
+      "backdrop_path": "/kONSCicmygBM59iCkhTKoal2j08.jpg",
+      "genre_ids": [
+        35,
+        10749,
+        18
+      ],
+      "id": 1542352,
+      "original_language": "ta",
+      "original_title": "யூத்",
+      "overview": "Youth follows Praveen, a 15-year-old boy who enters adolescence determined to find true love before school ends. As he goes through multiple relationships and heartbreaks, he slowly begins to understand what love truly means. Along the way, the experiences shape his growth, maturity, and outlook on life.",
+      "popularity": 1.7273,
+      "poster_path": "/rNzk0jlGRPnvZ26On5xhTmLaQhO.jpg",
+      "release_date": "2026-03-19",
+      "title": "Youth",
+      "video": false,
+      "vote_average": 0,
+      "vote_count": 0
+    },
+    {
+      "adult": false,
+      "backdrop_path": "/mXyqtRLVWoxKpw01hK4DjTPVcOt.jpg",
+      "genre_ids": [
+        28,
+        18
+      ],
+      "id": 69650,
+      "original_language": "ta",
+      "original_title": "யூத்",
+      "overview": "On his wedding day, Shiva (Vijay) discovers that his cousin and bride, Aruna, has run away because she does not want to marry a cook. But he takes it lightly and moves to Chennai with the girl's brother (Shyam Ganesh) to look for a job. One night, he saves Sandya from some goons. In gratitude, she kisses him. Shiva starts to fall in love with Sandya. After several occasions where they bumped into each other, Shiva harbours hope that she too reciprocates his affections.",
+      "popularity": 0.8198,
+      "poster_path": "/1qwP8Y9zWFHW8r0RJ47iINjEfKy.jpg",
+      "release_date": "2002-07-19",
+      "title": "Youth",
+      "video": false,
+      "vote_average": 6,
+      "vote_count": 13
+    }
+  ]
+}

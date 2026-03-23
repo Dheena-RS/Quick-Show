@@ -1,0 +1,42 @@
+{
+  "thaaiKizhavi": [
+    {
+      "id": 1602783,
+      "title": "Thaai Kizhavi",
+      "date": "2026-02-27",
+      "lang": "ta"
+    }
+  ],
+  "youth": [
+    {
+      "id": 1056379,
+      "title": "YOUTH",
+      "date": "2022-12-01",
+      "lang": "en"
+    },
+    {
+      "id": 1244160,
+      "title": "Youth",
+      "date": "",
+      "lang": "en"
+    },
+    {
+      "id": 450319,
+      "title": "Youth",
+      "date": "2016-01-01",
+      "lang": "en"
+    },
+    {
+      "id": 1389358,
+      "title": "Youth",
+      "date": "1915-10-09",
+      "lang": "en"
+    },
+    {
+      "id": 714671,
+      "title": "Youth",
+      "date": "",
+      "lang": "en"
+    }
+  ]
+}

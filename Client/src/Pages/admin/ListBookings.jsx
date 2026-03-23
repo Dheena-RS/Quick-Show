@@ -3,18 +3,29 @@ import { dummyBookingData } from '../../assets/assets';
 import Loading from '../../Components/Loading';
 import Title from '../../Components/admin/Title';
 import { dateFormat } from '../../Components/lib/dateFormat';
+import { useAppContext } from '../../context/Appcontext';
 
 const ListBookings = () => {
   const currency=import.meta.env.VITE_CURRENCY
+  const {axios,getToken,user}=useAppContext()
   const [bookings,setBookings]=useState([]);
   const [isLoading,setIsLoading]=useState(true);
   const getAllBookings=async()=>{
-    setBookings(dummyBookingData)
-    setIsLoading(false);
+   try{
+    const {data}=await axios.get("/api/admin/all-bookings",{headers:{Authorization:`Bearer ${await getToken()}`}});
+    if (data.success) {
+      setBookings(data.bookings || []);
+    }
+   } catch (error){
+    console.error(error);
+   }
+   setIsLoading(false)
   };
   useEffect(()=>{
-    getAllBookings();
-  },[]);
+    if(user){
+      getAllBookings();
+    }
+  },[user]);
   return !isLoading ? (
     <>
       <Title text1="List" text2="Bookings" />
@@ -30,12 +41,12 @@ const ListBookings = () => {
             </tr>
           </thead>
           <tbody className='text-sm font-light'>
-            {bookings.map((item, index)=>(
+            {(bookings || []).map((item, index)=>(
               <tr key={index} className='border-b border-primary/20 bg-primary/5 even:bg-primary/10'>
-                <td className='p-2 min-w-45 pl-5'>{item.user.name}</td>
-                <td className='p-2'>{item.show.movie.title}</td>
-                <td className='p-2'>{dateFormat(item.show.showDateTime)}</td>
-                <td className='p-2'>{Object.keys(item.bookedSeats).map(seat=>item.bookedSeats[seat]).join(", ")}</td>
+                <td className='p-2 min-w-45 pl-5'>{item.user?.name}</td>
+                <td className='p-2'>{item.show?.movie?.title}</td>
+                <td className='p-2'>{item.show?.showDateTime ? dateFormat(item.show.showDateTime) : ''}</td>
+                <td className='p-2'>{Object.keys(item.bookedSeats || {}).map(seat=>item.bookedSeats[seat]).join(", ")}</td>
                 <td className='p-2'>{currency} {item.amount} </td>
 
               </tr>
