@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import AdminNavbar from '../../Components/admin/adminNavbar'
+import AdminNavbar from '../../Components/admin/AdminNavbar'
 import AdminSidebar from '../../Components/admin/AdminSidebar'
 import { Outlet } from 'react-router-dom'
 import { useAppContext } from '../../context/Appcontext'
