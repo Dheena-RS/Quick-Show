@@ -19,8 +19,14 @@ const MovieCard = ({ movie }) => {
                     Buy Tickets
                 </button>
                 <p className='flex items-center gap-1 text-sm text-gray-400 mt-1 pr-1'>
-                    <StarIcon className='w-4 h-4 text-primary fill-primary' />
-                    {movie.vote_average.toFixed(1)}
+                    {movie.vote_average > 0 ? (
+                        <>
+                            <StarIcon className='w-4 h-4 text-primary fill-primary' />
+                            {movie.vote_average.toFixed(1)}
+                        </>
+                    ) : (
+                        <span className='px-1.5 py-0.5 bg-gray-700 text-[10px] rounded leading-none text-gray-300 font-medium'>New</span>
+                    )}
                 </p>
             </div>
 

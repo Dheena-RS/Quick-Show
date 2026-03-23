@@ -52,8 +52,12 @@ useEffect(()=>{
           <p className='text-primary'>ENGLISH, TAMIL</p>
           <h1 className='text-4xl font-semibold max-w-96 text-balance'>{show.movie.title}</h1>
           <div className='flex items-center gap-2 text-gray-300'>
-            <StarIcon className='w-5 h-5 text-primary fill-primary' />
-            {show.movie.vote_average.toFixed(1)} User Rating
+            {show.movie.vote_average > 0 ? (
+              <>
+                <StarIcon className='w-5 h-5 text-primary fill-primary' />
+                {show.movie.vote_average.toFixed(1)} User Rating
+              </>
+            ) : "Not yet rated"}
               </div>
               <p className='text-gray-400 mt-2 text-sm leading-tight max-w-xl'>{show.movie.overview}</p>
 
