@@ -5,6 +5,7 @@ import BlurCircle from '../Components/BlurCircle'
 import timeFormat from '../Components/lib/timeFormat'
 import { dateFormat } from '../Components/lib/dateFormat'
 import { useAppContext } from '../context/Appcontext'
+import { Link } from 'react-router-dom'
 
 const MyBookings = () => {
   const currency =import.meta.env.VITE_CURRENCY
@@ -25,11 +26,32 @@ const MyBookings = () => {
     }
     setIsLoading(false)
   }
-  useEffect(()=>{
-    if(user){
-      getMyBooking()
+  const verifyPayment = async (sessionId) => {
+    try {
+      await axios.post('/api/booking/verify-payment', { sessionId }, {
+        headers: { Authorization: `Bearer ${await getToken()}` }
+      });
+      // Clean up the URL
+      window.history.replaceState(null, '', window.location.pathname);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      getMyBooking();
     }
-  },[user])
+  };
+
+  useEffect(() => {
+    if (user) {
+      const urlParams = new URLSearchParams(window.location.search);
+      const sessionId = urlParams.get('session_id');
+
+      if (sessionId) {
+        verifyPayment(sessionId);
+      } else {
+        getMyBooking();
+      }
+    }
+  }, [user]);
   return !isLoading ? (
     <div className='relative px-6 md:px-16 lg:px-40 pt-30 md:pt-40 min-h-[80vh]'>
       <BlurCircle top='100px' left='100px'/>
@@ -50,7 +72,7 @@ const MyBookings = () => {
           <div className='flex flex-col md:items-end md:text-right justify-between p-4'>
             <div className='flex items-center gap-4'>
               <p className='text-2xl font-semibold mb-3'>{currency}{item.amount}</p>
-              {!item.isPaid && <button className='bg-primary px-4 py-1.5 mb-3 text-sm rounded-full font-medium cursor-pointer'>Pay Now</button>}
+              {!item.isPaid && <Link to={item.paymentLink} className='bg-primary px-4 py-1.5 mb-3 text-sm rounded-full font-medium cursor-pointer'>Pay Now</Link>}
             </div>
             <div className='text-sm'>
               <p><span className='text-gray-400'>Total Tickets:</span>{item.bookedSeats.length}</p>

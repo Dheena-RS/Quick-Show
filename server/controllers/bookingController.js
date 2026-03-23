@@ -1,3 +1,4 @@
+import { inngest } from "../inngest/index.js";
 import Booking from "../models/Booking.js";
 import Show from "../models/Show.js"
 import stripe from "stripe"
@@ -56,7 +57,7 @@ export const createBooking=async(req,res)=>{
             quantity:1
         }]
         const session =await stripeInstance.checkout.sessions.create({
-            success_url:`${origin}/my-bookings`,
+            success_url:`${origin}/my-bookings?session_id={CHECKOUT_SESSION_ID}`,
             cancel_url:`${origin}/my-bookings`,
             line_items:line_items,
             mode:'payment',
@@ -68,7 +69,12 @@ export const createBooking=async(req,res)=>{
 
         booking.paymentLink=session.url
         await booking.save()
-
+        await inngest.send({
+            name:"app/checkpayment",
+            data:{
+                bookingId:booking._id.toString()
+            }
+        })
 
         res.json({success:true,url:session.url})
     } catch(error){
@@ -86,5 +92,26 @@ export const getOccupiedSeats=async(req,res)=>{
     }catch(error){
         console.log(error.message);
         res.json({success:false,message:error.message})
+    }
+}
+
+export const verifyPayment = async (req, res) => {
+    try {
+        const { sessionId } = req.body;
+        const stripeInstance = new stripe(process.env.STRIPE_SECRET_KEY);
+        const session = await stripeInstance.checkout.sessions.retrieve(sessionId);
+
+        if (session.payment_status === 'paid') {
+            const bookingId = session.metadata.bookingId;
+            await Booking.findByIdAndUpdate(bookingId, {
+                isPaid: true,
+                paymentLink: ""
+            });
+            return res.json({ success: true, message: "Payment verified successfully" });
+        }
+        res.json({ success: false, message: "Payment not verified" });
+    } catch (error) {
+        console.log("verifyPayment error:", error.message);
+        res.json({ success: false, message: error.message });
     }
 }
