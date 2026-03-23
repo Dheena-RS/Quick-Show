@@ -8,6 +8,7 @@ export const inngest = new Inngest({ id: "movie -ticket-booking" });
 
 
 import connectDB from "../configs/db.js";
+import sendEmail from '../configs/nodeMailer.js';
 
 const syncUserCreation=inngest.createFunction(
     {id:'sync-user-from-clerk'},
@@ -75,6 +76,31 @@ const releaseSeatsAndDeleteBooking=inngest.createFunction(
         })
     }
 )
+const sendBookingConfirmationEmail = inngest.createFunction(
+    {id:"send-booking-confirmation-email"},
+    {event:"app/show-booked"},
+    async({event,step})=>{
+        const {bookingId}=event.data;
+        const booking=await Booking.findById(bookingId).populate({
+            path:'show',
+            populate:{path:"movie",model:"movie"}
+        }).populate('user');
+        await sendEmail({
+            to:booking.user.email,
+            subject:`Payment Confirmation: "${booking.show.movie.title}" booked!`,
+            body:`<div style="font-family:Arial, sans-serif; line-height:1.5;" >
+            <h2>Hi ${booking.user.name},</h2>
+            <p>Your booking for <strong style="color:#F84565;">"${booking.show.movie.title}"</strong> is confirmed.</P>
+            <p>
+            <strong>Date:</strong> ${new Date(booking.show.showDateTime).toLocaleDateString('en-US',{timeZone:'Asia/Kolkata'})}<br/>
+            <strong>Time:</strong> ${new Date(booking.show.showDateTime).toLocaleDateString('en-US',{timeZone:'Asia/Kolkata'})}
+            </p>
+            <p>Enjoy the show!🎬</P>
+            <p>Thanks for booking with us!<br/>-QuickShow Team</P>
+            </div>`
+        })
+    }
+)
 
 
-export const functions = [syncUserCreation,syncUserDeletion,syncUserUpdation,releaseSeatsAndDeleteBooking];
+export const functions = [syncUserCreation,syncUserDeletion,syncUserUpdation,releaseSeatsAndDeleteBooking,sendBookingConfirmationEmail];
