@@ -107,6 +107,14 @@ export const verifyPayment = async (req, res) => {
                 isPaid: true,
                 paymentLink: ""
             });
+            
+            await inngest.send({
+                name: "app/show-booked",
+                data: {
+                    bookingId
+                }
+            });
+
             return res.json({ success: true, message: "Payment verified successfully" });
         }
         res.json({ success: false, message: "Payment not verified" });
